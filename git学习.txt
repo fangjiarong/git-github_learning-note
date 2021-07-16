@@ -1,0 +1,184 @@
+
+林纳斯·托瓦兹（自由主义教皇）
+
+    Linux
+
+    Git
+        版本控制工具：svn，不是集中式
+        git是目前世界上最先进的分布式版本控制
+
+        git版本只用于linux，移植后，安装包内有只用于git的linux虚拟机
+        git bash here创建虚拟机代码输入框
+        git GUI here 用户图形化界面，不成熟
+        字体选：Consolas
+
+    设置一次就可以
+    $ git config --global user.name"fangjiarong"
+    $ git config --global user.email"fcq4.9.leo@qq.com"
+
+    global全局的
+    config(计算机系统)配置;
+    按下键盘的上键可以复制上一句代码，但是不运行
+
+    $ git config user.name
+    fangjiarong
+    $ git config user.email
+    fcq4.9.leo@qq.com
+
+    所创建的信息存储在c盘用户下的.gitconfig文件中
+
+    linux命令：
+        mkdir xxx新建文件夹
+
+        vi x.txt新建/编辑文件（visual editor）
+            输入i进入编辑模式
+            esc+：+wq保存退出
+            esc+：+q！不保存并退出
+        cd xxx 进去xxx目录
+        cd ..返回上一级目录
+        ls 列出当前文件夹中所有文件
+            绿色是快捷方式
+            紫色是文件夹
+            白色是文件
+        pwd 显示当前目录
+        cat x.txt 显示文件内容
+        clear 清屏
+
+    用合适的文本编辑器，linux mac windows编码格式不会乱
+
+    每一个客户端都有三个区：工作区 版本区 暂存区【不用安装服务端，因为是分布式】
+
+        工作区：working directory:简单理解为你在电脑看到的目录（项目文件夹），进行增删改查的区域
+
+            ------git add xxx   将工作区的文件添加到暂存区
+
+        暂存区：stage：介于工作区和版本区中间，工作区到版本区的必经之路
+
+            ------git commit -m ‘提交信息’将暂存区的文件添加到版本区
+
+        版本区：repository：工作区有一个隐藏目录.git，准确的来说这个不算工作区，而是git的版本库
+
+    创建版本库
+
+        git init 初始化版本库
+            创建一个仓库repository【init是初始化的意思】
+            得到. git     其实就是暂存区和版本区，除了.git外的都是工作区
+            主分支master
+
+        git add xxx
+            没有任何提示则成功
+            若未初始化，会提示fatal
+            失败会提示：fatal
+            可能出现警告：warning：LF will be replaced by crlf inxxx
+                原因：linux和windows的换行符不一致导致的
+                解决方法：执行命令git config --global core.autocrlf false
+
+            git add *或者git add .所有提交
+
+        git status
+            查看提交状态
+            绿色表示在暂存区
+            红色表示在工作区
+
+        git commit -m ‘提交信息’
+
+差异对比
+    git diff:比较暂存区与工作区
+    git diff --cached ：比较版本区与暂存区
+    git diff master ：比较版本区与工作区
+
+    a代表暂存区
+    b代表工作区
+
+    -号代表a
+    +号代表b
+
+    @@ -1,3 +1，6 @@     意思是以暂存区里的第三行为启示行，以工作区的第六行为结束行（3,6]
+
+日志+版本号
+    git log 显示从最近到最远的所有提交日志
+        enter下一个
+        q退出
+    git reflog 显示每次提交（commit）的commit id
+        精简版日志
+
+版本回退+版本穿梭+版本撤销
+    git reset --hard HEAD^      版本回退（回退一次提交）            HEAD^^回退两次            hard意思是强制
+    git reset --hard Obfafd     回退到指定Obfafd的commit id 版本
+    穿梭
+    git reset HEAD        用版本库中的文件去替换暂存区的全部文件
+    git checkout --x.txt        用暂存区指定文件去替换工作区的指定文件（危险）会改变工作区
+    git checkout HEAD x.txt     用版本库中的文件替换暂存区和工作区的文件（危险）会改变工作区
+    git rm --cached x.txt       从暂存区删除文件
+
+    删除文件【必须经过git管理后才能删除】
+        git rm x.txt删除文件
+            手动删除，工作区没有了，但是暂存区和版本区不知道，显示红色，因为没有执行add操作，add操作的意思是将工作区里面的动作同步到暂存区，删除也是动作。
+            命令删除，暂存区知道删除了。版本区不知道，
+                命令删除的条件是文件经过的版本库和暂存区
+        git rm -r xxxx 删除文件夹
+                命令删除的条件是文件经过的版本库和暂存区
+                文件夹里面必须有东西
+                删除时路径必须在上一层，不能在要删除的文件夹里面操作删除命令
+
+
+
+项目人员组成：
+    开发人员--分支
+    测试人员--分支
+    UI、UE
+    产品经理
+
+
+分支：
+    1.主分支：master
+        代码经过了开发人员单元测试，以及测试人员详细的一套测试通过之后，确定没有问题
+    2.开发分支：dev
+        开发人员所有代码提交到此分支
+    3.测试分支：test
+        测试人员用的（由开发人员【组长】进行完单元测试的代码会放入此分支）
+        测试的种类：
+            回归测试：
+                开发修改完后，测试人员再进行测试
+            压力测试：
+                例如：一次并发10万，测试时候用15万并发
+            性能测试：
+                例如：一次并发10万，测试时候用10万并发
+            单元测试：
+                由开发人员做
+    4.里程碑分支：tags
+        v1.0.0
+
+
+        版本号：1.0.0
+            第一位：大版本号
+            第二位：小幅度的功能更新
+            第三位：bug
+
+创建分支的命令
+    git checkout -b dev     创建dev分支，并切换到dev分支       b表示branch
+        创建新的分支，但是主分支的内容也复制了一份过去
+
+        注意：创建新的分支需要保证原有的master有内容（内容还需要在暂存区和版本库里面存在）然后才能创建，否则在空的master创建新分支会导致master不见
+    git branch              查看当前分支情况
+    git checkout master     切换分支
+    git merge dev           合并dev分支到当前分支，
+        合并之后dev分支还在
+    git branch -d dev       删除指定分支      d表示del
+        在其他分支执行命令才能删除
+    git diff branch1 branch2显示出两个分支之间所有有差异的文件的详细差异
+    git diff branch1 branch2 --stat显示出两个分支之间所有有差异的文件列表
+    git diff branch1 branch2 xxx显示指定文件的详细差异
+
+
+    版本冲突conlict
+        合并分支时，如果在同一个文件，在同一个地方，都修改了或新增内容，会引起版本冲突
+
+        解决版本冲突的最好办法是借助IDE解决，简单且高效
+
+
+
+
+
+
+
